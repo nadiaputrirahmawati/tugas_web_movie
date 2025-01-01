@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Str;
 
 class Movie extends Model
 {
@@ -21,4 +22,21 @@ class Movie extends Model
         'available',
         'genre_id',
     ];
+
+    protected static function boot()
+    {
+        parent::boot();
+
+        // Set UUID secara otomatis saat create
+        static::creating(function ($model) {
+            if (empty($model->id)) {
+                $model->id = (string) Str::uuid();
+            }
+        });
+    }
+
+    public function genre()
+    {
+        return $this->belongsTo(Genre::class, 'genre_id','id');
+    }
 }

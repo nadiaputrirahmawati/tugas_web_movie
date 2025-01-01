@@ -14,7 +14,16 @@ export default {
             fontFamily: {
                 sans: ['Figtree', ...defaultTheme.fontFamily.sans],
             },
+            colors: {
+                primaryy: '#5FB8EA',
+                secondaryy: '#c9e5f9',
+                primary: '#C5D3E8',
+                secondary: '#A6AEBF',
+            }
         },
     },
-    plugins: [],
+    plugins: [require("daisyui")],
+    daisyui: {
+        themes: ["light", "dark", "cupcake"], // Tema bawaan DaisyUI
+    },
 };
