@@ -17,6 +17,8 @@ return new class extends Migration
             $table->text('synopsis');
             $table->string('poster')->nullable();
             $table->string('year', 8);
+            $table->string('trailer');
+            $table->string('duration');
             $table->boolean('available')->default(true);
             $table->uuid('genre_id');
             $table->foreign('genre_id')->references('id')->on('genres')->onDelete('cascade');

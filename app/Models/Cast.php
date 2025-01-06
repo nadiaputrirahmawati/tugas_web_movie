@@ -16,4 +16,9 @@ class Cast extends Model
     protected $fillable = [
         'name', 'age', 'biodata', 'avatar'
     ];
+    
+    public function cast_movie()
+    {
+        return $this->hasMany(CastMovie::class, 'cast_id','id');
+    }
 }

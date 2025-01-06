@@ -19,6 +19,8 @@ class Movie extends Model
         'synopsis',
         'poster',
         'year',
+        'duration',
+        'trailer',
         'available',
         'genre_id',
     ];
@@ -39,4 +41,11 @@ class Movie extends Model
     {
         return $this->belongsTo(Genre::class, 'genre_id','id');
     }
+
+    public function cast()
+    {
+        return $this->BelongsToMany(Cast::class, 'cast_movies', 'movie_id', 'cast_id');
+    }
+
+    
 }

@@ -7,11 +7,13 @@ use App\Models\Movie;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
+use function Flasher\Toastr\Prime\toastr;
+
 class MovieController extends Controller
 {
     public function index()
     {
-        $movie = Movie::with('genre')->paginate(5);
+        $movie = Movie::with('genre')->orderBy('created_at', 'desc')->paginate(5);
         return view('admin.movie.index', compact('movie'));
     }
 
@@ -28,7 +30,9 @@ class MovieController extends Controller
             'title' => 'required|string|max:255',
             'synopsis' => 'required|string',
             'poster' => 'required|image|mimes:jpg,png,jpeg|max:2048',
-            'year' => 'required|integer',
+            'year' => 'required|string',
+            'trailer' => 'required|string',
+            'duration' => 'required|string',
             'available' => 'nullable|string|in:on,off',
             'genre_id' => 'required|exists:genres,id',
         ]);
@@ -45,16 +49,21 @@ class MovieController extends Controller
             'synopsis' => $validated['synopsis'],
             'poster' => $posterPath ?? null,
             'year' => $validated['year'],
+            'trailer' => $validated['trailer'],
+            'duration' => $validated['duration'],
             'available' => $validated['available'],
             'genre_id' => $validated['genre_id'],
         ]);
+        toastr()->success('Movie Sudah Berhasil Di Tambahkan');
 
-        return redirect()->route('movie.index')->with('success', 'Movie created successfully');
+        return redirect()->route('movie.index');
     }
 
     public function show($id)
     {
-        $movie = Movie::findOrFail($id);
+        // $movie = Movie::findOrFail($id);
+        $movie = Movie::with('cast')->findOrFail($id);
+        // dd($movie);
         return view('admin.movie.detail', compact('movie'));
     }
 
@@ -72,7 +81,9 @@ class MovieController extends Controller
             'title' => 'required|string|max:255',
             'synopsis' => 'required|string',
             'poster' => 'nullable|image|mimes:jpg,png,jpeg|max:2048',
-            'year' => 'required|integer',
+            'year' => 'required|string',
+            'trailer' => 'required|string',
+            'duration' => 'required|string',
             'available' => 'nullable|string|in:on,off',
             'genre_id' => 'required|exists:genres,id',
         ]);
@@ -97,11 +108,13 @@ class MovieController extends Controller
             'title' => $validated['title'],
             'synopsis' => $validated['synopsis'],
             'year' => $validated['year'],
+            'trailer' => $validated['trailer'],
+            'duration' => $validated['duration'],
             'available' => $validated['available'],
             'genre_id' => $validated['genre_id'],
         ]);
-
-        return redirect()->route('movie.index')->with('success', 'Movie updated successfully');
+        toastr()->success('Movie Sudah Berhasil Di Update');
+        return redirect()->route('movie.index');
     }
 
     public function destroy($id)
@@ -115,12 +128,60 @@ class MovieController extends Controller
 
         // Hapus data movie
         $movie->delete();
-
-        return redirect()->route('movie.index')->with('success', 'Movie deleted successfully');
+        toastr()->success('Movie Sudah Berhasil Di Delete');
+        return redirect()->route('movie.index');
     }
 
-    public function detail($id){
-        $movie = Movie::findOrFail($id);
-        return view('admin.movie.detail', compact('movie'));
+    public function data()
+    {
+        // Ambil 5 film terbaru
+        $movie = Movie::with('genre')
+            ->orderBy('created_at', 'desc')
+            ->limit(4)
+            ->get();
+
+        // Ambil ID dari 5 film tersebut
+        $movieIds = $movie->pluck('id')->toArray();
+        $otherMovies = Movie::with('genre')
+            ->whereNotIn('id', $movieIds)
+            ->orderBy('id', 'desc')
+            ->limit(5)
+            ->get();
+
+        // Ambil semua film dengan genre 'romance'
+        $romanceMovies = Movie::with('genre')
+            ->whereHas('genre', function ($query) {
+                $query->where('name', 'romance');
+            })
+            ->orderBy('created_at', 'desc')
+            ->get();
+        return view('pages.index', compact('movie', 'otherMovies', 'romanceMovies'));
+    }
+
+
+    public function detailMovie($id)
+    {
+        $movie = Movie::with('genre')->findOrFail($id);
+
+        return view('pages.detailMovie', compact('movie'));
+    }
+
+    public function movieall()
+    {
+        $search = request()->query('search');
+
+        if ($search) {
+            $movie = Movie::with('genre')->with('cast')->where('title', 'like', "%{$search}%")->paginate(10);
+        } else {
+            $movie = Movie::with('genre')->with('cast')->paginate(10);
+        }
+        return view('pages.movie', compact('movie'));
+    }
+
+    public function movienews()
+    {
+        $movie = Movie::with('genre')->with('cast')->orderBy('created_at', 'desc')->get();
+
+        return view('pages.MovieTerbaru', compact('movie'));
     }
 }

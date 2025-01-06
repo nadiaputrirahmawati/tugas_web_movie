@@ -14,19 +14,16 @@ class UsersSeeder extends Seeder
      */
     public function run(): void
     {
-        // Pastikan tabel roles memiliki data
         $defaultRole = Roles::first();
         if (!$defaultRole) {
-            $this->command->error('No roles found. Please seed the roles table first.');
+            $this->command->error('Tidak Ada Role Default');
             return;
         }
-
-        // Insert pengguna secara manual
         User::create([
             'id' => Str::uuid(),
-            'name' => 'nadia',
-            'email' => 'nadia@gmail.com',
-            'password' => bcrypt('password'),
+            'name' => 'admin',
+            'email' => 'admin@gmail.com',
+            'password' => 'admin',
             'email_verified_at' => now(),
             'role_id' => $defaultRole->id,
             'created_at' => now(),

@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en" data-theme="light">
+<html lang="en" data-theme="nord">
 
 <head>
     <meta charset="utf-8">
@@ -20,24 +20,15 @@
 
 <body>
     {{-- <div class="p-4"> --}}
-        @include('partials.navbar')
-    <div class="carousel w-full lg:h-f" id="carousel">
-        <div class="carousel-item w-full  transition-opacity duration-500">
-            <img src="{{ asset('image/1.png') }}" alt="Burger" class="lg:h-full h-52" />
-        </div>
-        <div class="carousel-item w-full  transition-opacity duration-500">
-            <img src="{{ asset('image/2.png') }}" alt="Burger" class="lg:h-full h-52" />
-        </div>
-        <div class="carousel-item w-full  transition-opacity duration-500">
-            <img src="{{ asset('image/3.png') }}" alt="Burger" class="lg:h-full h-52" />
-        </div>
-        <div class="carousel-item w-full  transition-opacity duration-500">
-            <img src="{{ asset('image/4.png') }}" alt="Burger" class="lg:h-full h-52" />
-        </div>
-    </div>
-    <main class="container mx-auto p-0 mb-36 w-screen">
+    @include('partials.navbar')
+    <main>
         @yield('content')
     </main>
+
+
+    @include('partials.Footer')
+
+
     @stack('js')
 </body>
 

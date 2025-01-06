@@ -22,8 +22,11 @@ export default {
             }
         },
     },
-    plugins: [require("daisyui")],
+    plugins: [
+        require("daisyui"),
+        // require('@tailwindcss/line-clamp'),
+    ],
     daisyui: {
-        themes: ["light", "dark", "cupcake"], // Tema bawaan DaisyUI
+        themes: ["light", "dark", "cupcake",  "nord",], // Tema bawaan DaisyUI
     },
 };

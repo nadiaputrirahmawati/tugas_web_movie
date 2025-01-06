@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" data-theme="cupcake">
+<html lang="en" data-theme= "nord">
 
 <head>
     <meta charset="UTF-8">
@@ -15,11 +15,31 @@
     @include('partials.Sidebar')
 
     <!-- Main Content -->
-    <div id="main-content" class="flex-1 p-16 overflow-y-auto">
+    <div id="main-content" class="flex-1 lg:p-10 p-3 overflow-y-auto mb-30 pb-20 ">
         @yield('content')
     </div>
 
     <script>
+        // Fungsi untuk mengatur tampilan logo berdasarkan lebar sidebar
+        const updateLogoVisibility = () => {
+            const sidebar = document.getElementById('sidebar');
+            const images = document.querySelectorAll('.img');
+
+            if (sidebar.classList.contains('w-64')) {
+                // Jika sidebar lebar, sembunyikan logo
+                images.forEach(img => img.classList.add('hidden'));
+            } else {
+                // Jika sidebar sempit, tampilkan logo
+                images.forEach(img => img.classList.remove('hidden'));
+                images.forEach(img => {
+                    img.style.width = '60px'; // Sesuaikan ukuran gambar
+                    img.style.margin = '0 auto';
+                    img.style.paddingBottom = '2.5rem';
+                });
+            }
+        };
+
+        // Fungsi toggle untuk buka/tutup sidebar
         const toggleSidebar = () => {
             const sidebar = document.getElementById('sidebar');
             const sidebarText = document.querySelectorAll('.sidebar-text');
@@ -33,8 +53,17 @@
                 sidebar.classList.add('w-64');
                 sidebarText.forEach(el => el.classList.remove('hidden'));
             }
+
+            // Perbarui logo sesuai kondisi sidebar
+            updateLogoVisibility();
         };
+
+        // Panggil updateLogoVisibility saat halaman pertama kali dimuat
+        // document.addEventListener('DOMContentLoaded', () => {
+        //     updateLogoVisibility();
+        // });
     </script>
+
 </body>
 
 </html>

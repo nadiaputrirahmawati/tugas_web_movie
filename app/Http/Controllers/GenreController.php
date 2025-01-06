@@ -7,66 +7,60 @@ use Illuminate\Http\Request;
 
 class GenreController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
+    // Menampilkan daftar semua genre
     public function index()
     {
-        return view('admin.genre.genre');
+        $genre = Genre::all();
+        return view('admin.genre.genre', compact('genre'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
+    // Menampilkan form untuk membuat genre baru
     public function create()
     {
-        $genre = Genre::all();
-        return view('admin.genre.create', compact('genre'));
+        return view('admin.genre.create');
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
+    // Menyimpan genre baru
     public function store(Request $request)
     {
-        $validated = $request->validate([
-            'name' => 'required|string'
+        $request->validate([
+            'name' => 'required|string|max:255',
         ]);
 
-        $genre = Genre::create($validated);
-
-        return redirect()->route('genre.index')->with('success', 'Genre created successfully');
+        Genre::create($request->all());
+        toastr()->success('Genre Sudah Berhasil Di Tambahkan');
+        return redirect()->route('genre.index');
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
+    // Menampilkan detail genre
+    public function show(Genre $genre)
     {
-        //
+        // 
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
+    // Menampilkan form untuk mengedit genre
+    public function edit(Genre $genre)
     {
-        //
+        return view('admin.genre.update', compact('genre'));
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
+    // Menyimpan perubahan genre
+    public function update(Request $request, Genre $genre)
     {
-        //
+        $request->validate([
+            'name' => 'required|string|max:255',
+        ]);
+
+        $genre->update($request->all());
+        toastr()->success('Genre Sudah Berhasil Di Update');
+        return redirect()->route('genre.index');
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
+    // Menghapus genre
+    public function destroy(Genre $genre)
     {
-        //
+        $genre->delete();
+        toastr()->success('Genre Sudah Berhasil Di Delete');
+        return redirect()->route('genre.index');
     }
 }

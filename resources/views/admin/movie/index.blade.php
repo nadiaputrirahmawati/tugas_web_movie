@@ -5,13 +5,13 @@
 @section('content')
     <h1 class="text-3xl font-bold text-black">Movies All</h1>
     <div class="mt-10 gap-3 flex">
-        <a href="movie/create" class="bg-primary px-5 py-3 rounded-full text-sky-950 text-xl font-semibold">Tambah Movie</a>
-        <a href="#" class="bg-secondary text-white px-5 py-3 rounded-full text-xl font-semibold"
+        <a href="movie/create" class="bg-gray-200 shadow-lg px-5 py-3 rounded-full text-sky-950 text-xl font-semibold">Tambah Movie</a>
+        <a href="#" class="bg-secondary text-white px-5 py-3 rounded-full text-xl font-semibold shadow-lg"
             onclick="my_modal_3.showModal()">Tambah Genre</a>
     </div>
     @include('admin.genre.create')
 
-    <div class="card bg-white mt-5 p-0 rounded-3xl">
+    <div class="card bg-white mt-5 p-0 rounded-3xl shadow-lg">
         <div class="overflow-x-auto text-black">
             <table class="table borderless">
                 <thead class="text-black text-xl">
@@ -36,7 +36,7 @@
                             <td>{{ $row->genre->name ?? 'Tidak Ada Genre' }}</td>
                             <td>
                                 <div class="flex justify-center gap-3">
-                                    <a href="{{ 'admin/movie/' . $row->id}}" class="bg-orange-400 text-white px-4 py-2 rounded-xl">
+                                    <a href="{{ route('movie.show', $row->id)}}" class="bg-orange-400 text-white px-4 py-2 rounded-xl">
                                         <i class="fa-solid fa-circle-info text-xl"></i>
                                        
                                     </a>
