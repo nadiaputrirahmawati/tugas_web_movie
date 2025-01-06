@@ -76,7 +76,6 @@ class MovieController extends Controller
 
     public function update(Request $request, $id)
     {
-        // Validasi input data
         $validated = $request->validate([
             'title' => 'required|string|max:255',
             'synopsis' => 'required|string',
@@ -89,21 +88,16 @@ class MovieController extends Controller
         ]);
         // dd($validated);
         $validated['available'] = $request->input('available') === 'on' ? 1 : 0;
-        // Mencari movie yang akan diupdate
         $movie = Movie::findOrFail($id);
 
-        // Menyimpan file poster baru jika ada
         if ($request->hasFile('poster')) {
-            // Hapus poster lama jika ada
             if ($movie->poster && Storage::exists('public/' . $movie->poster)) {
                 Storage::delete('public/' . $movie->poster);
             }
-            // Simpan poster baru
             $posterPath = $request->file('poster')->store('posters', 'public');
             $movie->poster = $posterPath;
         }
 
-        // Update data movie
         $movie->update([
             'title' => $validated['title'],
             'synopsis' => $validated['synopsis'],
@@ -134,13 +128,12 @@ class MovieController extends Controller
 
     public function data()
     {
-        // Ambil 5 film terbaru
+
         $movie = Movie::with('genre')
             ->orderBy('created_at', 'desc')
             ->limit(4)
             ->get();
 
-        // Ambil ID dari 5 film tersebut
         $movieIds = $movie->pluck('id')->toArray();
         $otherMovies = Movie::with('genre')
             ->whereNotIn('id', $movieIds)
@@ -148,7 +141,6 @@ class MovieController extends Controller
             ->limit(5)
             ->get();
 
-        // Ambil semua film dengan genre 'romance'
         $romanceMovies = Movie::with('genre')
             ->whereHas('genre', function ($query) {
                 $query->where('name', 'romance');
@@ -182,6 +174,6 @@ class MovieController extends Controller
     {
         $movie = Movie::with('genre')->with('cast')->orderBy('created_at', 'desc')->get();
 
-        return view('pages.MovieTerbaru', compact('movie'));
+        return view('pages.movieTerbaru', compact('movie'));
     }
 }

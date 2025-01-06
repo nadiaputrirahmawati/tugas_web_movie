@@ -20,7 +20,7 @@
 
 <body>
     {{-- <div class="p-4"> --}}
-    @include('partials.navbar')
+    @include('partials.Navbar')
     <main>
         @yield('content')
     </main>
